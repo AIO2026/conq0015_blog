@@ -57,7 +57,7 @@ vnindex_props = {
 }
 ```
 
-<!-- ```python
+```python
 def to_float(obj):
     if isinstance(obj, np.generic):
         return obj.item()
@@ -124,7 +124,7 @@ html = f"""
 """
 
 display(HTML(html))
-``` -->
+```
 
 <!-- <div id="react-root-e7d1f114-4474-49f7-**83ab**-571920822561" style="width:100%; max-width:900px; margin:auto;"></div> -->
 
