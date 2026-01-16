@@ -253,12 +253,12 @@ plt.show()
 
 ![png](Time_series_vn_files/Time_series_vn_7_0.png)
 
-Dữ liệu chuỗi thời gian có thể có nhiều dạng tính xu thế khác nhau. Giả sử, xem xét một chuỗi $\left\{ y_{t} \right\}$ có xu thế:
+Dữ liệu chuỗi thời gian có thể có nhiều dạng tính xu thế khác nhau. Giả sử, xem xét một chuỗi $\{ y_{t} \}$ có xu thế:
 
-- Xu thế tuyến tính theo thời gian: $y_{t} = \beta_{0} + \beta_{1}t + u_{t},\ \ \ \ \ t = 1,\ 2,\ \ldots.,\ T$. Nếu $\beta_{1} > 0$, chuỗi $\left\{ y_{t} \right\}$ có xu hướng tăng. Nếu $\beta_{1} <0 $, chuỗi $\left\{ y_{t} \right\}$ có xu hướng giảm.
+- Xu thế tuyến tính theo thời gian: $y_{t} = \beta_{0} + \beta_{1}t + u_{t},\ \ t = 1,2,\ldots,T$ . Nếu $\beta_{1} > 0$, chuỗi $\{ y_{t} \}$ có xu hướng tăng. Nếu $\beta_{1} <0 $, chuỗi $\{ y_{t} \}$ có xu hướng giảm.
 
 - Xu thế thời gian bậc 2: $y_{t} = \beta_{0} + \beta_{1}t + \beta_{2}t^{2} + u_{t},\ \ \ \ \ t = 1,\ 2,\ \ldots.,\ T$
-  Nếu $\beta_{1} > 0$ và $\beta_{2} >0 $, chuỗi $\left\{ y_{t} \right\}$ có xu hướng tăng và ngược lại. Nếu $\beta_{1} > 0$ và $\beta_{2} < 0 $, biểu diễu chuỗi $\left\{ y_{t} \right\}$ là một đường cong lồi, nghĩa là biến tăng nhưng sau đó giảm dần, và ngược lại.
+  Nếu $\beta_{1} > 0$ và $\beta_{2} >0 $, chuỗi $\{ y_{t} \}$ có xu hướng tăng và ngược lại. Nếu $\beta_{1} > 0$ và $\beta_{2} < 0 $, biểu diễu chuỗi $\{ y_{t} \}$ là một đường cong lồi, nghĩa là biến tăng nhưng sau đó giảm dần, và ngược lại.
 
 - Xu thế dạng mũ: $log(y_{t}) = \beta_{0} + \beta_{1}t + u_{t},\ \ \ \ \ t = 1,\ 2,\ \ldots.,\ T$. Trong đó $\beta_{1}$ là tốc độ tăng trung bình mỗi kỳ của $y_{t}$
 
