@@ -180,7 +180,9 @@ display(HTML(html))
   root.render(React.createElement(VNIndexAnalysis, props));
 </script> -->
 
-![png](Time_series_vn_files/Time_series_vn_1_0.png)
+<!-- ![png](Time_series_vn_files/Time_series_vn_1_0.png) -->
+
+![png](https://github.com/AIO2026/conq0015_blog/blob/time_series/Time_series_vn_files/Time_series_vn_1_0.png?raw=true)
 
 Khi phân tích dữ liệu, người phân tích cần đặc biệt quan tâm đến dữ liệu chuỗi thời gian. Lý do là nhiều mô hình phân tích định lượng cơ bản thường yêu cầu giả thiết các quan sát là độc lập. Giả thiết này khó có thể đạt được trong dữ liệu chuỗi thời gian, do mỗi quan sát thường phụ thuộc vào các quan sát trước đó. Nói cách khác, trong dữ liệu chuỗi thời gian, thông tin ở quá khứ sẽ có ảnh hưởng đến tương lai. Ví dụ, chỉ số VN-Index ngày hôm qua cao, thì có rất nhiều khả năng chỉ số của ngày hôm nay sẽ cao. Chính do sự phụ thuộc mang tính chất thời gian, trong nhiều trường hợp, độ trễ của biến phụ thuộc được sử dụng như là một biến độc lập trong mô hình nghiên cứu.
 
@@ -188,7 +190,7 @@ Khi phân tích dữ liệu, người phân tích cần đặc biệt quan tâm 
 
 ### **2.1. Tính xu thế**
 
-Tính xu thế, còn được gọi là tính xu hướng, được hiểu là khuynh hướng thay đổi nhìn chung của dữ liệu chuỗi thời gian (tăng hoặc giảm). Hình 1 là minh hoạ về tính xu thế của một dữ liệu chuỗi thời gian, trong đó, các giá trị nhận được tăng đều qua thời gian. Việc một biến có tính xu thế sẽ ảnh hưởng đến các suy luận từ kết quả phân tích định lượng, đặc biệt là vấn đề hồi quy giả mạo.
+Tính xu thế, còn được gọi là tính xu hướng, được hiểu là khuynh hướng thay đổi nhìn chung của dữ liệu chuỗi thời gian (tăng hoặc giảm). Hình 1 là minh hoạ về tính xu thế của một dữ liệu chuỗi thời gian, trong đó, các giá trị nhận được tăng đều qua thời gian. **Việc** một biến có tính xu thế sẽ ảnh hưởng đến các suy luận từ kết quả phân tích định lượng, đặc biệt là vấn đề hồi quy giả mạo.
 
 ```python
 def create_vnindex_3years(target_end_price):
