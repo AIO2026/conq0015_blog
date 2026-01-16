@@ -57,7 +57,7 @@ vnindex_props = {
 }
 ```
 
-```python
+<!-- ```python
 def to_float(obj):
     if isinstance(obj, np.generic):
         return obj.item()
@@ -124,11 +124,11 @@ html = f"""
 """
 
 display(HTML(html))
-```
+``` -->
 
-<div id="react-root-e7d1f114-4474-49f7-83ab-571920822561" style="width:100%; max-width:900px; margin:auto;"></div>
+<!-- <div id="react-root-e7d1f114-4474-49f7-**83ab**-571920822561" style="width:100%; max-width:900px; margin:auto;"></div> -->
 
-<script type="module">
+<!-- <script type="module">
   import React, { useEffect, useRef } from "https://esm.sh/react@18";
   import ReactDOM from "https://esm.sh/react-dom@18/client";
   import Chart from "https://esm.sh/chart.js@4.4.1/auto";
@@ -178,7 +178,9 @@ display(HTML(html))
 
   const root = ReactDOM.createRoot(document.getElementById("react-root-e7d1f114-4474-49f7-83ab-571920822561"));
   root.render(React.createElement(VNIndexAnalysis, props));
-</script>
+</script> -->
+
+![png](Time_series_vn_files/Time_series_vn_1_0.png)
 
 Khi phân tích dữ liệu, người phân tích cần đặc biệt quan tâm đến dữ liệu chuỗi thời gian. Lý do là nhiều mô hình phân tích định lượng cơ bản thường yêu cầu giả thiết các quan sát là độc lập. Giả thiết này khó có thể đạt được trong dữ liệu chuỗi thời gian, do mỗi quan sát thường phụ thuộc vào các quan sát trước đó. Nói cách khác, trong dữ liệu chuỗi thời gian, thông tin ở quá khứ sẽ có ảnh hưởng đến tương lai. Ví dụ, chỉ số VN-Index ngày hôm qua cao, thì có rất nhiều khả năng chỉ số của ngày hôm nay sẽ cao. Chính do sự phụ thuộc mang tính chất thời gian, trong nhiều trường hợp, độ trễ của biến phụ thuộc được sử dụng như là một biến độc lập trong mô hình nghiên cứu.
 
@@ -251,7 +253,9 @@ plt.tight_layout()
 plt.show()
 ```
 
-![png](Time_series_vn_files/Time_series_vn_7_0.png)
+<!-- ![png](Time_series_vn_files/Time_series_vn_7_0.png) -->
+
+![png](https://github.com/AIO2026/conq0015_blog/blob/time_series/Time_series_vn_files/Time_series_vn_7_0.png?raw=true)
 
 Dữ liệu chuỗi thời gian có thể có nhiều dạng tính xu thế khác nhau. Giả sử, xem xét một chuỗi $\{ y_{t} \}$ có xu thế:
 
@@ -337,7 +341,9 @@ plt.show()
 
 ```
 
-![png](Time_series_vn_files/Time_series_vn_10_0.png)
+<!-- ![png](Time_series_vn_files/Time_series_vn_10_0.png) -->
+
+![Time_series_vn_files/Time_series_vn_10_0.png](https://github.com/AIO2026/conq0015_blog/blob/time_series/Time_series_vn_files/Time_series_vn_10_0.png?raw=true)
 
 ### **2.3. Tính dừng và tầm quan trọng của tính dừng**
 
@@ -385,7 +391,9 @@ plt.tight_layout()
 plt.show()
 ```
 
-![png](Time_series_vn_files/Time_series_vn_12_0.png)
+<!-- ![png](Time_series_vn_files/Time_series_vn_12_0.png) -->
+
+![png](https://github.com/AIO2026/conq0015_blog/blob/time_series/Time_series_vn_files/Time_series_vn_12_0.png?raw=true)
 
 Tính dừng (stationarity) của một chuỗi thời gian có ảnh hưởng rất lớn đến kết quả hồi quy trong các mô hình nghiên cứu định lượng, đặc biệt là trong phân tích dữ liệu chuỗi thời gian. Thứ nhất, việc hồi quy dữ liệu không dừng sẽ dẫn đến jết quả giả mạo (spurious regression). Trong trường hợp này, mô hình có thể tạo ra hệ số ước lượng và thống kê t có ý nghĩa, mặc dù giữa các biến không thực sự có mối quan hệ nhân quả. Điều này dẫn đến kết luận sai lầm về mối liên hệ giữa các biến. Giá trị R2 cũng có thể cao một cách giả tạo, làm người phân tích nghĩ rằng mô hình có sự phù hợp tốt với dữ liệu. Thứ hai, Khi các biến không dừng, các giả định về tính phân phối của sai số trong mô hình hồi quy có thể bị vi phạm. Điều này làm giảm hiệu lực của các kiểm định thống kê và ước lượng, dẫn đến kết quả không tin cậy. Thứ ba, trong trường hợp chuỗi không dừng, các ước lượng từ mô hình hồi quy tuyến tính có thể không hội tụ về giá trị thật khi kích thước mẫu tăng lên, làm cho các ước lượng không vững. Các hệ số ước lượng có thể bị chệch và phân phối của các hệ số này không tuân theo phân phối chuẩn, gây khó khăn cho việc áp dụng kiểm định giả thuyết và khoảng tin cậy.
 
