@@ -6,11 +6,11 @@ Dữ liệu chuỗi thời gian ngày càng phổ biến trong nghiên cứu kho
 
 Dữ liệu chuỗi thời gian là dữ liệu được thu thập từ cùng một đối tượng tại các thời điểm khác nhau. Khác với dữ liệu chéo, dữ liệu chuỗi thời gian đặc biệt quan tâm đến trật tự của các quan sát, bộ dữ liệu phải được sắp xếp theo thứ tự thời gian. Bảng 1.1. minh hoạ dữ liệu chuỗi thời gian là chỉ số VN-Index từ ngày 17/12/2025 đến 15/01/2026. Các số liệu không thể được sắp xếp theo thứ tự ngẫu nhiên, mà thay vào đó, dữ liệu phải được sắp xếp theo một thứ tự thời gian cụ thể (có thể từ xa đến gần, hoặc ngược lại).
 
-
 ```python
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 import json
 from IPython.display import HTML, display
@@ -56,7 +56,6 @@ vnindex_props = {
     "data": create_vnindex_data(),
 }
 ```
-
 
 ```python
 def to_float(obj):
@@ -127,8 +126,6 @@ html = f"""
 display(HTML(html))
 ```
 
-
-
 <div id="react-root-e7d1f114-4474-49f7-83ab-571920822561" style="width:100%; max-width:900px; margin:auto;"></div>
 
 <script type="module">
@@ -183,16 +180,13 @@ display(HTML(html))
   root.render(React.createElement(VNIndexAnalysis, props));
 </script>
 
-
-
 Khi phân tích dữ liệu, người phân tích cần đặc biệt quan tâm đến dữ liệu chuỗi thời gian. Lý do là nhiều mô hình phân tích định lượng cơ bản thường yêu cầu giả thiết các quan sát là độc lập. Giả thiết này khó có thể đạt được trong dữ liệu chuỗi thời gian, do mỗi quan sát thường phụ thuộc vào các quan sát trước đó. Nói cách khác, trong dữ liệu chuỗi thời gian, thông tin ở quá khứ sẽ có ảnh hưởng đến tương lai. Ví dụ, chỉ số VN-Index ngày hôm qua cao, thì có rất nhiều khả năng chỉ số của ngày hôm nay sẽ cao. Chính do sự phụ thuộc mang tính chất thời gian, trong nhiều trường hợp, độ trễ của biến phụ thuộc được sử dụng như là một biến độc lập trong mô hình nghiên cứu.
 
 ## **2. Đặc điểm của dữ liệu chuỗi thời gian**
 
 ### **2.1. Tính xu thế**
 
-Tính xu thế, còn được gọi là tính xu hướng, được hiểu là khuynh hướng thay đổi nhìn chung của dữ liệu chuỗi thời gian (tăng hoặc giảm). Hình 1 là minh hoạ về tính xu thế của một dữ liệu chuỗi thời gian, trong đó, các giá trị  nhận được tăng đều qua thời gian. Việc một biến có tính xu thế sẽ ảnh hưởng đến các suy luận từ kết quả phân tích định lượng, đặc biệt là vấn đề hồi quy giả mạo.
-
+Tính xu thế, còn được gọi là tính xu hướng, được hiểu là khuynh hướng thay đổi nhìn chung của dữ liệu chuỗi thời gian (tăng hoặc giảm). Hình 1 là minh hoạ về tính xu thế của một dữ liệu chuỗi thời gian, trong đó, các giá trị nhận được tăng đều qua thời gian. Việc một biến có tính xu thế sẽ ảnh hưởng đến các suy luận từ kết quả phân tích định lượng, đặc biệt là vấn đề hồi quy giả mạo.
 
 ```python
 def create_vnindex_3years(target_end_price):
@@ -257,28 +251,21 @@ plt.tight_layout()
 plt.show()
 ```
 
-
-    
 ![png](Time_series_vn_files/Time_series_vn_7_0.png)
-    
-
 
 Dữ liệu chuỗi thời gian có thể có nhiều dạng tính xu thế khác nhau. Giả sử, xem xét một chuỗi $\left\{ y_{t} \right\}$ có xu thế:
 
-- Xu thế tuyến tính theo thời gian:     $y_{t} = \beta_{0} + \beta_{1}t + u_{t},\ \ \ \ \ t = 1,\ 2,\ \ldots.,\ T$. Nếu $\beta_{1} > 0$, chuỗi $\left\{ y_{t} \right\}$ có xu hướng tăng. Nếu $\beta_{1} <0 $, chuỗi $\left\{ y_{t} \right\}$ có xu hướng giảm.
+- Xu thế tuyến tính theo thời gian: $y_{t} = \beta_{0} + \beta_{1}t + u_{t},\ \ \ \ \ t = 1,\ 2,\ \ldots.,\ T$. Nếu $\beta_{1} > 0$, chuỗi $\left\{ y_{t} \right\}$ có xu hướng tăng. Nếu $\beta_{1} <0 $, chuỗi $\left\{ y_{t} \right\}$ có xu hướng giảm.
 
+- Xu thế thời gian bậc 2: $y_{t} = \beta_{0} + \beta_{1}t + \beta_{2}t^{2} + u_{t},\ \ \ \ \ t = 1,\ 2,\ \ldots.,\ T$
+  Nếu $\beta_{1} > 0$ và $\beta_{2} >0 $, chuỗi $\left\{ y_{t} \right\}$ có xu hướng tăng và ngược lại. Nếu $\beta_{1} > 0$ và $\beta_{2} < 0 $, biểu diễu chuỗi $\left\{ y_{t} \right\}$ là một đường cong lồi, nghĩa là biến tăng nhưng sau đó giảm dần, và ngược lại.
 
--   Xu thế thời gian bậc 2:     $y_{t} = \beta_{0} + \beta_{1}t + \beta_{2}t^{2} + u_{t},\ \ \ \ \ t = 1,\ 2,\ \ldots.,\ T$
-Nếu $\beta_{1} > 0$ và $\beta_{2} >0 $, chuỗi $\left\{ y_{t} \right\}$ có xu hướng tăng và ngược lại. Nếu $\beta_{1} > 0$ và $\beta_{2} < 0 $, biểu diễu chuỗi $\left\{ y_{t} \right\}$ là một đường cong lồi, nghĩa là biến tăng nhưng sau đó giảm dần, và ngược lại.
-
--   Xu thế dạng mũ:     $log(y_{t}) = \beta_{0} + \beta_{1}t + u_{t},\ \ \ \ \ t = 1,\ 2,\ \ldots.,\ T$. Trong đó $\beta_{1}$ là tốc độ tăng trung bình mỗi kỳ của $y_{t}$
-
+- Xu thế dạng mũ: $log(y_{t}) = \beta_{0} + \beta_{1}t + u_{t},\ \ \ \ \ t = 1,\ 2,\ \ldots.,\ T$. Trong đó $\beta_{1}$ là tốc độ tăng trung bình mỗi kỳ của $y_{t}$
 
 ### **2.2. Tính chu kỳ/ Tính mùa vụ**
 
 Tính chu kỳ là sự lặp lại đều đặn của cùng một đặc điểm trong thời gian dài (thường dài hơn một năm), không theo một khoảng thời gian nào cố định. Một chu kỳ thường đo thời gian giữa hai đỉnh hoặc đáy liên tiếp.
 Tính mùa vụ là sự lặp lại đều đặn của cùng một đặc điểm trong vòng một năm (khoảng thời gian thường không dài hơn một năm). Tính mùa vụ có thể hiểu là tính chu kỳ nhưng kèm theo điều kiện là sự thay đổi phụ thuộc vào một lịch cố định nào đó trong năm. Khi đó biểu đồ đường của biến sẽ có dạng sóng đều đặn trong một khoảng thời gian ngắn. Khoảng thời gian trung bình giữa hai đỉnh hoặc đáy liên tiếp của biến có tính mùa vụ thường ngắn hơn biến có tính chu kỳ. Đồng thời, mức độ thay đổi của biến có tính mùa vụ cũng ít biến động hơn biến có tính chu kỳ. Hình 2. là biểu đồ đường minh họa tính mùa vụ và tính chu kỳ của dữ liệu chuỗi thời gian
-
 
 ```python
 def create_seasonal_data():
@@ -343,8 +330,6 @@ plt.grid(True, alpha=0.3, linestyle='--')
 
 # Format trục x
 ax = plt.gca()
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
-ax.xaxis.set_major_locator(mdates.YearLocator())
 plt.xticks(rotation=0)
 
 plt.tight_layout()
@@ -352,24 +337,19 @@ plt.show()
 
 ```
 
-
-    
 ![png](Time_series_vn_files/Time_series_vn_10_0.png)
-    
-
 
 ### **2.3. Tính dừng và tầm quan trọng của tính dừng**
 
 Một chuỗi thời gian dừng là việc phân phối xác suất của chuỗi không thay đổi qua thời gian. Phân phối xác suất của một chuỗi là không dừng nếu phân phối đó đảm bảo ba đặc tính sau:
 
-  1. Giá trị trung bình không đổi qua thời gian:     $E\left( x_{t} \right) = \mu$
+1. Giá trị trung bình không đổi qua thời gian: $E\left( x_{t} \right) = \mu$
 
-  2. Phương sai không đổi qua thời gian:
-    $Var\left( x_{t} \right) = \sigma^{2}$
-  3. Hiệp phương sai chỉ phụ thuộc vào khoảng cách giữa các thời điểm, chứ không phụ thuộc vào thời điểm cụ thể:     $Cov\left( x_{t},\ x_{t + h} \right) = \gamma_{h}$
+2. Phương sai không đổi qua thời gian:
+   $Var\left( x_{t} \right) = \sigma^{2}$
+3. Hiệp phương sai chỉ phụ thuộc vào khoảng cách giữa các thời điểm, chứ không phụ thuộc vào thời điểm cụ thể: $Cov\left( x_{t},\ x_{t + h} \right) = \gamma_{h}$
 
 Hình 3 là biểu đồ minh hoạ một chuỗi dừng và một chuỗi không dừng. Trong đó, có thể nhận thấy trong chuỗi không dừng, có xuất hiện xu hướng thời gian, đồng thời, giá trị trung bình và phương sai của chuỗi thay đổi phụ thuộc vào khoảng thời gian được lựa chọn để lấy mẫu dữ liệu. Một biến có tính xu thế thường không dừng, trong khi một biến có tính chu kỳ hoặc tính mùa vụ sẽ có tính dừng.
-
 
 ```python
 df_vnindex_real = df_vnindex.copy()
@@ -405,11 +385,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-
-    
 ![png](Time_series_vn_files/Time_series_vn_12_0.png)
-    
-
 
 Tính dừng (stationarity) của một chuỗi thời gian có ảnh hưởng rất lớn đến kết quả hồi quy trong các mô hình nghiên cứu định lượng, đặc biệt là trong phân tích dữ liệu chuỗi thời gian. Thứ nhất, việc hồi quy dữ liệu không dừng sẽ dẫn đến jết quả giả mạo (spurious regression). Trong trường hợp này, mô hình có thể tạo ra hệ số ước lượng và thống kê t có ý nghĩa, mặc dù giữa các biến không thực sự có mối quan hệ nhân quả. Điều này dẫn đến kết luận sai lầm về mối liên hệ giữa các biến. Giá trị R2 cũng có thể cao một cách giả tạo, làm người phân tích nghĩ rằng mô hình có sự phù hợp tốt với dữ liệu. Thứ hai, Khi các biến không dừng, các giả định về tính phân phối của sai số trong mô hình hồi quy có thể bị vi phạm. Điều này làm giảm hiệu lực của các kiểm định thống kê và ước lượng, dẫn đến kết quả không tin cậy. Thứ ba, trong trường hợp chuỗi không dừng, các ước lượng từ mô hình hồi quy tuyến tính có thể không hội tụ về giá trị thật khi kích thước mẫu tăng lên, làm cho các ước lượng không vững. Các hệ số ước lượng có thể bị chệch và phân phối của các hệ số này không tuân theo phân phối chuẩn, gây khó khăn cho việc áp dụng kiểm định giả thuyết và khoảng tin cậy.
 
@@ -417,16 +393,11 @@ Tính dừng (stationarity) của một chuỗi thời gian có ảnh hưởng r
 
 Đặc thù của dữ liệu chuỗi thời gian là khả năng xuất hiện của tính xu thế/ mùa vụ/ chu kỳ hoặc hiện tượng tự tương quan là rất lớn. Các đặc điểm này có thể dẫn đến hiện tượng chuỗi không dừng, gây ra những ảnh hưởng tiêu cực đến kết quả phân tích hồi quy. Biến đổi dữ liệu thô trong phân tích dữ liệu chuỗi thời gian là một bước quan trọng để đảm bảo tính chính xác và hiệu quả của các phương pháp phân tích. Cụ thể, việc biến đổi dữ liệu thô sẽ giúp loại bỏ xu hướng và tính mùa vụ, đảm bảo tính dừng, giảm biến thiên và sự mất cân đối, từ đó làm cho dữ liệu trở nên phù hợp với các giả định của các mô hình phân tích cũng như cải thiện khả năng dự đoán. Ba phương pháp biến đổi dữ liệu chuỗi thời gian phổ biến là lấy sai phân, logarit hoá, tính tốc độ tăng trưởng và chuẩn hoá dữ liệu.
 
-
-
-
-
 ### **3.1 SAI PHÂN (Differencing)**
 
 - Lấy sai phân: Phương pháp lấy sai phân là trừ giá trị hiện tại của chuỗi thời gian cho giá trị của chuỗi ở thời điểm trước đó. Có thể thực hiện sai phân bậc 1, 2 hoặc cao hơn tùy thuộc vào mức độ loại bỏ xu hướng. Việc lấy sai phân sẽ giúp loại bỏ xu hướng trong dữ liệu và làm cho chuỗi thời gian trở nên dừng.
 
 Công thức: $Δx_t = x_t - x_{t-k}$
-
 
 ```python
 print("""
@@ -439,22 +410,19 @@ df['diff_2'] = df['diff_1'].diff(periods=1)
 
 ```
 
-    
     # Sai phân bậc 1
     df['diff_1'] = df['x_t'].diff(periods=1)
-    
+
     # Sai phân bậc 2
     df['diff_2'] = df['diff_1'].diff(periods=1)
-    
-
 
 - Logarit hóa: Áp dụng hàm log lên các giá trị của chuỗi thời gian. Phương pháp này thường được sử dụng để biến đổi dữ liệu có phân phối không đều hoặc có sự khác biệt lớn về tỷ lệ tăng trưởng. Việc logarit hoá giúp giảm độ lớn của sự biến thiên và làm giảm ảnh hưởng của các điểm dữ liệu có giá trị lớn. Ký hiệu
 
 ### **3.2 LOGARIT HÓA**
+
 - Logarit hóa: Áp dụng hàm log lên các giá trị của chuỗi thời gian. Phương pháp này thường được sử dụng để biến đổi dữ liệu có phân phối không đều hoặc có sự khác biệt lớn về tỷ lệ tăng trưởng. Việc logarit hoá giúp giảm độ lớn của sự biến thiên và làm giảm ảnh hưởng của các điểm dữ liệu có giá trị lớn. Ký hiệu
 
 Công thức: $ln(x_t)$
-
 
 ```python
 print("""
@@ -468,25 +436,19 @@ df['log10_x'] = np.log10(df['x_t'])
 """)
 ```
 
-    
     import numpy as np
-    
+
     # Logarit tự nhiên
     df['log_x'] = np.log(df['x_t'])
-    
+
     # Log cơ số 10
     df['log10_x'] = np.log10(df['x_t'])
-    
-
 
 ### **3.3 TỐC ĐỘ TĂNG TRƯỞNG**
 
 ●Tính tốc độ tăng trưởng: Tốc độ tăng trưởng có thể tính toán là tỷ lệ phần trăm thay đổi giữa giá trị hiện tại và giá trị trước đó. Tốc độ tăng trưởng cũng có thể được tính toán bằng hiệu giữa logirithm của hai quan sát. Việc sử dụng tốc độ tăng trưởng nhằm loại bỏ xu hướng tuyệt đối và nhấn mạnh sự thay đổi tương đối
 
 Công thức: $\frac{x_{t} - x_{t - k}}{x_{t - k}} \approx ln\ \left( \frac{x_{t}}{x_{t - k}} \right)\  = ln\left( x_{t} \right) - ln\ \left( x_{t - k} \right)\  = \mathrm{\Delta}ln\left( x_{t} \right)$
-
-
-
 
 ```python
 print("""
@@ -502,17 +464,14 @@ df['growth_rate_pct'] = df['growth_rate'] * 100
 
 ```
 
-    
     # Cách 1: pct_change() - đơn giản nhất
     df['growth_rate'] = df['x_t'].pct_change()
-    
+
     # Cách 2: Log return
     df['log_return'] = np.log(df['x_t']).diff()
-    
+
     # Chuyển sang %
     df['growth_rate_pct'] = df['growth_rate'] * 100
-    
-
 
 ### **3.4 CHUẨN HÓA**
 
@@ -523,9 +482,6 @@ df['growth_rate_pct'] = df['growth_rate'] * 100
 - Công thức:
   - $Z-score: (x - mean) / std$
   - $Min-Max: (x - min) / (max - min)$
-
-
-
 
 ```python
 print("""
@@ -541,14 +497,11 @@ df['minmax_neg'] = 2 * df['minmax'] - 1
 
 ```
 
-    
     # Z-score (mean=0, std=1)
     df['zscore'] = (df['x_t'] - df['x_t'].mean()) / df['x_t'].std()
-    
+
     # Min-Max [0, 1]
     df['minmax'] = (df['x_t'] - df['x_t'].min()) / (df['x_t'].max() - df['x_t'].min())
-    
+
     # Min-Max [-1, 1]
     df['minmax_neg'] = 2 * df['minmax'] - 1
-    
-
